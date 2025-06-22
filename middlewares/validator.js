@@ -40,32 +40,19 @@ exports.adminLoginSchema = joi.object({
 });
 
 
-
-
-
 exports.studentSignupSchema = joi.object({
-    fullname: joi.string()
-        .min(3)
-        .max(100)
-        .required(),
+    fullname: joi.string().min(3).max(100).required(),
 
     phone: joi.string()
         .pattern(/^[0-9]{9,15}$/)
         .required(),
 
-    gender: joi.string()
-        .valid('Male', 'Female')
-        .required(),
+    gender: joi.string().valid('Male', 'Female').required(),
 
-    required: joi.string()  // Now accepting the value with $ sign
-        .regex(/^\$\d+$/)  // Ensures the value starts with $ followed by numbers
-        .required(),  
+    required: joi.number().min(0).required(),
 
-    paid: joi.string()  // Accepts the value with $ sign
-        .regex(/^\$\d+$/)  // Ensures the value starts with $ followed by numbers
-        .required(),  
+    paid: joi.number().min(0).required(),
+    // remaining: joi.number().min(0).optional() // Add this line to allow remaining
 
-    remaining: joi.string()  // Accepts the value with $ sign
-        .regex(/^\$\d+$/)  // Ensures the value starts with $ followed by numbers
-        .required()  
 });
+

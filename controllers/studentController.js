@@ -3,19 +3,20 @@ const { studentSchema } = require('../middlewares/validator');
 const {studentSignupSchema} = require('../middlewares/validator');
 
 exports.createStudent = async (req, res) => {
-    const { fullname, phone, gender, required, paid, remaining } = req.body;
+    let { fullname, phone, gender, required, paid } = req.body;
 
     try {
         // Validate the input data
-        const { error } = studentSignupSchema.validate({ fullname, phone, gender, required, paid, remaining });
+        const { error } = studentSignupSchema.validate({ fullname, phone, gender, required, paid });
         if (error) {
             return res.status(401).json({ success: false, message: error.details[0].message });
         }
 
-        // Remove the `$` symbol and convert to a number
-        const requiredAmount = parseInt(required.replace('$', ''));
-        const paidAmount = parseInt(paid.replace('$', ''));
-        const remainingAmount = parseInt(remaining.replace('$', ''));
+        // Ensure required and paid are numbers
+        const requiredAmount = typeof required === 'string' ? parseInt(required.replace('$', '')) : required;
+        const paidAmount = typeof paid === 'string' ? parseInt(paid.replace('$', '')) : paid;
+        
+        const remainingAmount = requiredAmount - paidAmount;
 
         const newStudent = new Student({
             fullname,
@@ -78,6 +79,7 @@ exports.createStudent = async (req, res) => {
         res.status(500).json({ success: false, message: "Internal Server Error" });
     }
 };
+
 
 
 
