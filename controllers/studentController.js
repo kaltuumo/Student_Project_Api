@@ -13,8 +13,9 @@ exports.createStudent = async (req, res) => {
         }
 
         // Ensure required and paid are numbers
-        const requiredAmount = typeof required === 'string' ? parseInt(required.replace('$', '')) : required;
-        const paidAmount = typeof paid === 'string' ? parseInt(paid.replace('$', '')) : paid;
+        const requiredAmount = typeof required === 'string' ? parseFloat(required.replace('$', '')) : required;
+        const paidAmount = typeof paid === 'string' ? parseFloat(paid.replace('$', '')) : paid;
+
         
         const remainingAmount = requiredAmount - paidAmount;
 
@@ -141,5 +142,30 @@ exports.getStudent = async (req, res) => {
     } catch (err) {
         console.log(err);
         res.status(500).json({ success: false, message: 'Error fetching Students' });
+    }
+
+    // Delete a student by ID      
+}
+
+
+
+exports.deleteStudent = async (req, res) => {
+    const studentId = req.params.id;  // Get the 'id' from the URL parameter
+
+    try {
+        // Find the admin by ID and delete it
+        const result = await Student.findByIdAndDelete(studentId);
+
+        if (!result) {
+            return res.status(404).json({ success: false, message: 'Student not found' });
+        }
+
+        res.status(200).json({
+            success: true,
+            message: 'Student deleted successfully',
+        });
+    } catch (err) {
+        console.log(err);
+        res.status(500).json({ success: false, message: 'Error deleting admin' });
     }
 };
