@@ -42,15 +42,12 @@ exports.adminLoginSchema = joi.object({
 
 exports.studentSignupSchema = joi.object({
     fullname: joi.string().min(3).max(100).required(),
-
     phone: joi.string()
         .pattern(/^[0-9]{9,15}$/)
         .required(),
-
     gender: joi.string().valid('Male', 'Female').required(),
-
+    education: joi.string().valid('Primary', 'Secondary').required(),
     required: joi.number().min(0).required(),
-
     paid: joi.number().min(0).required(),
     // remaining: joi.number().min(0).optional() // Add this line to allow remaining
 
