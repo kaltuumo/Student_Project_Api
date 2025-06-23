@@ -173,6 +173,12 @@ exports.updateStudent = async (req, res) => {
         if (paid) existingStudent.paid = paid;
         if (phone) existingStudent.phone = phone;
 
+          // Calculate remaining amount
+         if (required && paid) {
+            existingStudent.remaining = required - paid;
+        } else {
+            existingStudent.remaining = (existingStudent.required || 0) - (existingStudent.paid || 0);
+        }
         // Save the updated admin
         const updatedStudent = await existingStudent.save();
 
@@ -202,6 +208,7 @@ exports.updateStudent = async (req, res) => {
                 required: updatedStudent.required,
                 paid: updatedStudent.paid,
                 phone: updatedStudent.phone,
+                remaining: updatedStudent.remaining,
                 updateDate,
                 updateTime,
             },
@@ -230,5 +237,33 @@ exports.deleteStudent = async (req, res) => {
     } catch (err) {
         console.log(err);
         res.status(500).json({ success: false, message: 'Error deleting admin' });
+    }
+
+    // Add this in your controller to fetch students who haven't paid the full amount
+
+
+};
+
+exports.getPendingStudents = async (req, res) => {
+    try {
+        const pendingStudents = await Student.find({ remaining: { $gt: 0 } });
+
+        const formattedStudents = pendingStudents.map(student => ({
+            _id: student._id,
+            fullname: student.fullname,
+            education: student.education,
+            required: student.required,
+            paid: student.paid,
+            remaining: student.remaining,
+        }));
+
+        res.status(200).json({
+            success: true,
+            message: 'Pending students fetched successfully',
+            data: formattedStudents,
+        });
+    } catch (err) {
+        console.log(err);
+        res.status(500).json({ success: false, message: 'Error fetching pending students' });
     }
 };

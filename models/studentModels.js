@@ -8,7 +8,7 @@ const studentSchema = new mongoose.Schema({
 
     required: { type: Number, required: true },
     paid: { type: Number, required: true },
-    remaining: { type: Number, required: false } // Change to 'false' or optional
+    remaining: { type: Number,  default: 0  } // Change to 'false' or optional
 
 }, { timestamps: true });
 
