@@ -5,9 +5,9 @@ const cookieParser = require('cookie-parser');
 const mongoose = require('mongoose');
 const adminRouter = require('./routes/adminRout');
 const studentRouter = require('./routes/studentRout'); // Import the student router
+const attendanceRoutes = require('./routes/attendanceRout');
 require('dotenv').config();
 const app = express();
-
 app.use(helmet());
 app.use(cors());
 app.use(cookieParser());
@@ -21,11 +21,12 @@ mongoose.connect(process.env.MONGO_URI).then(() => {
     console.log('Failed to connect to MongoDB', err);   
 });
 
-// Use your routers for authentication, posts, and users
+
 app.use('/api/admin', adminRouter);
 app.use('/api/students', studentRouter); // Students router with student management logic
-// app.use('/api/posts', postRouter);  // Posts router with post creation logic
-// app.use('/api/users', userRouter);
+
+
+app.use('/api/attendance', attendanceRoutes);
 
 // Root endpoint
 app.get('/', (req, res) => {

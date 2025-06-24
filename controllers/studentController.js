@@ -267,3 +267,43 @@ exports.getPendingStudents = async (req, res) => {
         res.status(500).json({ success: false, message: 'Error fetching pending students' });
     }
 };
+
+// Function to fetch student statistics
+exports.getStudentStatistics = async (req, res) => {
+  try {
+    // Fetch total students
+    const totalStudents = await Student.countDocuments();
+
+    // Fetch active students
+    const activeStudents = await Student.countDocuments({ status: 'active' });
+
+    // Fetch inactive students
+    const inactiveStudents = await Student.countDocuments({ status: 'inactive' });
+
+    // Fetch students who have made payments
+    const paidStudents = await Student.countDocuments({ paid: { $gt: 0 } });
+
+    // Fetch students with balance due (remaining > 0)
+    const balanceDueStudents = await Student.countDocuments({ remaining: { $gt: 0 } });
+
+    // Fetch fully paid students (remaining is 0)
+    const fullyPaidStudents = await Student.countDocuments({ remaining: 0 });
+
+    // Return the statistics
+    res.status(200).json({
+      success: true,
+      message: 'Student statistics fetched successfully',
+      data: {
+        totalStudents,
+        activeStudents,
+        inactiveStudents,
+        paidStudents,
+        balanceDueStudents,
+        fullyPaidStudents
+      }
+    });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ success: false, message: 'Error fetching student statistics' });
+  }
+};

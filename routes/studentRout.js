@@ -9,5 +9,6 @@ router.get('/all-students', studentController.getStudent);
 router.get('/get-pending', studentController.getPendingStudents)
 router.delete('/delete-student/:id', studentController.deleteStudent);
 router.put('/update-student/:id', studentController.updateStudent);
+router.get('/statistics', studentController.getStudentStatistics);  // Use the controller method
 
 module.exports = router;
