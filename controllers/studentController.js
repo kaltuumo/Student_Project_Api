@@ -268,6 +268,7 @@ exports.getPendingStudents = async (req, res) => {
     }
 };
 
+
 // Function to fetch student statistics
 exports.getStudentStatistics = async (req, res) => {
   try {
@@ -279,6 +280,10 @@ exports.getStudentStatistics = async (req, res) => {
 
     // Fetch inactive students
     const inactiveStudents = await Student.countDocuments({ status: 'inactive' });
+
+    // Fetch pending students
+     const pendingStudents = await Student.countDocuments({ remaining: { $gt: 0 },  });
+    console.log("Pending Students: ", pendingStudents); // Debugging line
 
     // Fetch students who have made payments
     const paidStudents = await Student.countDocuments({ paid: { $gt: 0 } });
@@ -297,9 +302,10 @@ exports.getStudentStatistics = async (req, res) => {
         totalStudents,
         activeStudents,
         inactiveStudents,
+        pendingStudents,
         paidStudents,
         balanceDueStudents,
-        fullyPaidStudents
+        fullyPaidStudents,
       }
     });
   } catch (err) {
