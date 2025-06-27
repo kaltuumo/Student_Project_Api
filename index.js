@@ -6,6 +6,7 @@ const mongoose = require('mongoose');
 const adminRouter = require('./routes/adminRout');
 const studentRouter = require('./routes/studentRout'); // Import the student router
 const attendanceRoutes = require('./routes/attendanceRout');
+const classtimeRoute = require('./routes/classTimeRoutes')
 require('dotenv').config();
 const app = express();
 app.use(helmet());
@@ -23,7 +24,8 @@ mongoose.connect(process.env.MONGO_URI).then(() => {
 
 
 app.use('/api/admin', adminRouter);
-app.use('/api/students', studentRouter); // Students router with student management logic
+app.use('/api/students', studentRouter); 
+app.use('/api/classes', classtimeRoute); 
 
 
 app.use('/api/attendance', attendanceRoutes);
