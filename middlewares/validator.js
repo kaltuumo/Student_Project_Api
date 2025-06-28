@@ -58,8 +58,10 @@ exports.classTimeSchema = joi.object({
     teacher: joi.string().required(),
     room: joi.string().required(),
     day: joi.string().valid('Saturday', 'Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday').required(),
-    startTime: joi.string().pattern(/^([01]\d|2[0-3]):([0-5]\d)$/).required(), // e.g. 13:00
-    endTime: joi.string().pattern(/^([01]\d|2[0-3]):([0-5]\d)$/).required(),   // e.g. 14:30
+        // Accepts format like "2:30 PM", "08:00 AM"
+    startTime: joi.string().pattern(/^(0?[1-9]|1[0-2]):[0-5][0-9]\s?(AM|PM)$/i).required(),
+    endTime: joi.string().pattern(/^(0?[1-9]|1[0-2]):[0-5][0-9]\s?(AM|PM)$/i).required(),
+
 });
 
 
