@@ -4,11 +4,11 @@ const {studentSignupSchema} = require('../middlewares/validator');
 
 
 exports.createStudent = async (req, res) => {
-    let { fullname, phone, gender, education, required, paid } = req.body;
+    let { fullname, phone, gender, education, required, paid, classStudent, classLevel} = req.body;
 
     try {
         // Validate the input data
-        const { error } = studentSignupSchema.validate({ fullname, phone, gender, education, required, paid });
+        const { error } = studentSignupSchema.validate({ fullname, phone, gender, education, required, paid, classStudent, classLevel });
         if (error) {
             return res.status(401).json({ success: false, message: error.details[0].message });
         }
@@ -27,7 +27,9 @@ exports.createStudent = async (req, res) => {
             education,  
             required: requiredAmount,  // Store as number
             paid: paidAmount,          // Store as number
-            remaining: remainingAmount // Store as number
+            remaining: remainingAmount, // Store as number
+            classStudent: classStudent,
+            classLevel: classLevel,
         });
 
         const savedStudent = await newStudent.save();
@@ -72,6 +74,8 @@ exports.createStudent = async (req, res) => {
                 required: savedStudent.required,
                 paid: savedStudent.paid,
                 remaining: savedStudent.remaining,
+                classStudent: savedStudent.classStudent,
+                classLevel: savedStudent.classLevel,
                 createdDate,
                 createdTime,
                 updateDate,
@@ -131,6 +135,8 @@ exports.getStudent = async (req, res) => {
                 paid: Student.paid,
                 remaining: Student.remaining,
                 phone: Student.phone,
+                classStudent: Student.classStudent,
+                classLevel: Student.classLevel,
                 createdDate,
                 createdTime,
                 updateDate,
@@ -148,7 +154,7 @@ exports.getStudent = async (req, res) => {
         res.status(500).json({ success: false, message: 'Error fetching Students' });
     }
 
-    // Delete a student by ID      
+    
 }
 
 // UPDATE STUDENT

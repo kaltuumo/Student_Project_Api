@@ -1,5 +1,7 @@
 const ClassTime = require('../models/classTimeModel');
 const{classTimeSchema} = require ('../middlewares/validator')
+
+
 exports.createClassTime = async (req, res) => {
     let { subject, teacher, room, day, startTime, endTime } = req.body;
 

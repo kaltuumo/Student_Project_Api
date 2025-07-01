@@ -39,7 +39,6 @@ exports.adminLoginSchema = joi.object({
     .pattern(new RegExp('^[0-9]{6,100}$')) // Only numeric characters
 });
 
-
 exports.studentSignupSchema = joi.object({
     fullname: joi.string().min(3).max(100).required(),
     phone: joi.string()
@@ -49,9 +48,28 @@ exports.studentSignupSchema = joi.object({
     education: joi.string().valid('Primary', 'Secondary').required(),
     required: joi.number().min(0).required(),
     paid: joi.number().min(0).required(),
-    // remaining: joi.number().min(0).optional() // Add this line to allow remaining
-
+    remaining: joi.number().min(0).optional(), // Add this line to allow remaining
+    classStudent: joi.string().valid('Secondary Morning', 'Primary Morning', 'Primary AfterNoon').required(),
+    classLevel: joi.string().valid(
+        // Dynamically assign the class levels based on the selected class
+        'Form One', 'Form Two', 'Form Three', 'Form Four', // for "Secondary Morning"
+        '8th Grade', '7th Grade', '6th Grade', '5th Grade', // for "Primary Morning"
+        '4th Grade', '3rd Grade', '2nd Grade', '1st Grade'  // for "Primary AfterNoon"
+    ).when('classStudent', {
+        is: 'Secondary Morning',
+        then: joi.valid('Form One', 'Form Two', 'Form Three', 'Form Four').required(),
+        otherwise: joi.when('class', {
+            is: 'Primary Morning',
+            then: joi.valid('8th Grade', '7th Grade', '6th Grade', '5th Grade').required(),
+            otherwise: joi.when('class', {
+                is: 'Primary AfterNoon',
+                then: joi.valid('4th Grade', '3rd Grade', '2nd Grade', '1st Grade').required(),
+                otherwise: joi.string()
+            })
+        })
+    })
 });
+
 
 exports.classTimeSchema = joi.object({
     subject: joi.string().required(),
